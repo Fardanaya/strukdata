@@ -7,32 +7,38 @@ type Dosen struct {
 	id, nip               int
 }
 
-type Mhs struct {
+type Mahasiswa struct {
 	id                         int
 	nama, alamat, ttl, hp, nim string
 }
 
-type listDos struct {
+type listDosen struct {
 	data Dosen
-	next *listDos
+	next *listDosen
 }
-type listMhs struct {
-	data Mhs
-	next *listMhs
+
+type listMahasiswa struct {
+	data Mahasiswa
+	next *listMahasiswa
 }
 
 // TAMBAH DATA
-func addDos(chain *listDos, data Dosen) {
-	var tempList listDos
-	tempList.data = data
+func InsertData(list *List, customer Pelanggan) {
+	tempList := List{}
 
-	temp := chain
+	tempList.customer = customer
+
+	temp := list
+
 	if temp.next == nil {
+
 		temp.next = &tempList
+
 	} else {
 		for temp.next != nil {
 			temp = temp.next
 		}
+
 		temp.next = &tempList
 	}
 }
@@ -54,8 +60,8 @@ func viewAllDos(chain *listDos) {
 }
 
 // LIHAT DATA SEMUA DOSEN
-func viewAllMhs(chain *listMhs) {
-	temp := chain.next
+func ReadAll(list *List) {
+	temp := list.next
 
 	for temp != nil {
 		fmt.Println("-Data Mahasiswa-")
@@ -65,6 +71,27 @@ func viewAllMhs(chain *listMhs) {
 		fmt.Println("-NIM\t : ", temp.data.nim)
 		fmt.Println("-No. HP\t : ", temp.data.hp)
 		fmt.Println("-TTL\t : ", temp.data.ttl)
+		temp = temp.next
+	}
+}
+
+func DeleteData(list *List, id int) {
+	temp := list
+	var counter int = 0
+	for temp.next != nil {
+		counter++
+		if temp.next.customer.id == id {
+			if counter == 1 {
+				list.next = temp.next.next
+				break
+			} else if temp.next.next != nil {
+				temp.next = temp.next.next
+				break
+			} else {
+				temp.next = nil
+				break
+			}
+		}
 		temp = temp.next
 	}
 }
