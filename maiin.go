@@ -90,24 +90,3 @@ func inputUser() {
 	// atau data:= Buku{penulis : penulis, judul : judul , tahun : tahun}
 	addDos(&dosen, data)
 }
-
-func main() {
-	var dosen listDos
-	var id int = 0
-	for {
-		id++
-
-		// data := Buku{judul, penulis, tahun}
-		data := Dosen{nama, alamat, ttl, hp, id, nip}
-		// atau data:= Buku{penulis : penulis, judul : judul , tahun : tahun}
-		addDos(&dosen, data)
-
-		var tanya string
-		fmt.Println("Tambah data ?")
-		fmt.Scan(&tanya)
-		if tanya == "n" {
-			break
-		}
-	}
-
-}
