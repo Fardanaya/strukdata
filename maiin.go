@@ -69,45 +69,80 @@ func viewAllMhs(chain *listMhs) {
 	}
 }
 
-func inputUser() {
-	var nama, alamat, ttl, hp string
-	var nip int
 
-	fmt.Println("Masukkan data dosen")
-	fmt.Println("Nama\t: ")
-	fmt.Scan(&nama)
-	fmt.Println("Alamat\t: ")
-	fmt.Scan(&alamat)
-	fmt.Println("TTL\t: ")
-	fmt.Scan(&ttl)
-	fmt.Println("No. HP\t: ")
-	fmt.Scan(&hp)
-	fmt.Println("NIP\t: ")
-	fmt.Scan(&nip)
-
-	// data := Buku{judul, penulis, tahun}
-	data := Dosen{nama, alamat, ttl, hp, id, nip}
-	// atau data:= Buku{penulis : penulis, judul : judul , tahun : tahun}
-	addDos(&dosen, data)
+func utama(){
+	var in int
+	for in !=3{
+		fmt.Println("PENGISIAN DATA")
+		fmt.Println("1. DOSEN")
+		fmt.Println("2. MAHASISWA")
+		fmt.Println("3. EXIT")
+		fmt.Scan(&in)
+		if in !=3 {
+			menu(in)
+		}
+	}
 }
 
-func main() {
-	var dosen listDos
-	var id int = 0
-	for {
-		id++
-
-		// data := Buku{judul, penulis, tahun}
-		data := Dosen{nama, alamat, ttl, hp, id, nip}
-		// atau data:= Buku{penulis : penulis, judul : judul , tahun : tahun}
-		addDos(&dosen, data)
-
-		var tanya string
-		fmt.Println("Tambah data ?")
-		fmt.Scan(&tanya)
-		if tanya == "n" {
-			break
+func menu(x int){
+	var in int
+	for in != 6{
+		switch x {
+			case 1:
+				fmt.Println("PENGISIAN DATA DOSEN")
+			case 2:
+				fmt.Println("PENGISIAN DATA MAHASISWA")
+			}
+			fmt.Println("1. Tambah data")
+			fmt.Println("2. Hapus data")
+			fmt.Println("3. Update data")
+			fmt.Println("4. Lihat semua data")
+			fmt.Println("5. Lihat dari ID")
+			fmt.Println("6. Kembali ")
+			if x==1{
+				// punya dosen
+				fmt.Scan(&in)
+				switch in {
+				case 1:
+					// add()
+					fmt.Println("add DOS")
+				case 2:
+					// del()
+					fmt.Println("del DOS")
+				case 3:
+					// update()
+					fmt.Println("up DOS")
+				case 4:
+					// viewAll()
+					fmt.Println("viewall DOS")
+				case 5:
+					// viewID()
+					fmt.Println("view DOS")
+				}
+			} else if x==2{
+				// punya mahasiswa
+				fmt.Scan(&in)
+				switch in {
+					case 1:
+						// add()
+						fmt.Println("add MHS")
+					case 2:
+						// del()
+						fmt.Println("del MHS")
+					case 3:
+						// update()
+						fmt.Println("up MHS")
+					case 4:
+						// viewAll()
+						fmt.Println("viewall MHS")
+					case 5:
+						// viewID()
+						fmt.Println("view MHS")
+				}
+			}
 		}
 	}
 
+func main() {
+	utama()
 }
