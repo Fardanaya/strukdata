@@ -1,9 +1,7 @@
 package main
 
 import (
-	"bufio"
 	"fmt"
-	"os"
 )
 
 type Dosen struct {
@@ -92,7 +90,7 @@ func ReadAll(listDosen *structDosen, listMahasiswa *structMahasiswa, selector in
 	}
 }
 
-func DeleteData(listDosen *structDosen, listMahasiswa *structMahasiswa, selector int) {
+func DeleteData(listDosen *structDosen, listMahasiswa *structMahasiswa, id int, selector int) {
 	tempDosen := listDosen.next
 	tempMahasiswa := listMahasiswa.next
 
@@ -100,11 +98,8 @@ func DeleteData(listDosen *structDosen, listMahasiswa *structMahasiswa, selector
 	if selector == 1 {
 		for tempDosen.next != nil {
 			counter++
-			if tempDosen.next.data.id == selector {
-				if counter == 1 {
-					tempDosen.next = tempDosen.next.next
-					break
-				} else if tempDosen.next.next != nil {
+			if tempDosen.next.data.id == id {
+				if tempDosen.next.next != nil {
 					tempDosen.next = tempDosen.next.next
 					break
 				} else {
@@ -117,7 +112,7 @@ func DeleteData(listDosen *structDosen, listMahasiswa *structMahasiswa, selector
 	} else {
 		for tempMahasiswa.next != nil {
 			counter++
-			if tempMahasiswa.next.data.id == selector {
+			if tempMahasiswa.next.data.id == id {
 				if counter == 1 {
 					tempMahasiswa.next = tempMahasiswa.next.next
 					break
@@ -135,27 +130,20 @@ func DeleteData(listDosen *structDosen, listMahasiswa *structMahasiswa, selector
 }
 
 func inputUser(selector int) {
-	//var nama, alamat, ttl, hp, nip, nim string
-	var nim string
-	scanner := bufio.NewScanner(os.Stdin)
+	var nama, alamat, ttl, hp, nip, nim string
 
 	if selector == 1 {
 		fmt.Println("Masukkan data dosen")
 		fmt.Print("Nama\t: ")
-		scanner.Scan()
-		nama := scanner.Text()
+		fmt.Scan(&nama)
 		fmt.Print("Alamat\t: ")
-		scanner.Scan()
-		alamat := scanner.Text()
+		fmt.Scan(&alamat)
 		fmt.Print("TTL\t: ")
-		scanner.Scan()
-		ttl := scanner.Text()
+		fmt.Scan(&ttl)
 		fmt.Print("No. HP\t: ")
-		scanner.Scan()
-		hp := scanner.Text()
+		fmt.Scan(&hp)
 		fmt.Print("NIP\t: ")
-		scanner.Scan()
-		nip := scanner.Text()
+		fmt.Scan(&nip)
 
 		dataDosen := Dosen{id, nama, alamat, ttl, hp, nip}
 		dataMahasiswa := Mahasiswa{id, nama, alamat, ttl, hp, nim}
@@ -164,16 +152,14 @@ func inputUser(selector int) {
 }
 
 func main() {
-	scanner := bufio.NewScanner(os.Stdin)
 	fmt.Println("Test")
 
 	for {
 
 		inputUser(1)
-
+		var x string
 		fmt.Print("Tambah Data Lagi ? ( y / n ) \n-> ")
-		scanner.Scan()
-		x := scanner.Text()
+		fmt.Scan(&x)
 
 		if x != "y" {
 			break
@@ -182,5 +168,7 @@ func main() {
 		fmt.Print("\n")
 	}
 	inputUser(1)
+	DeleteData(&dosen, &mahasiswa, 2, 1)
 	ReadAll(&dosen, &mahasiswa, 1)
+
 }
