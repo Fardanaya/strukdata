@@ -93,15 +93,15 @@ func ReadAll(listDosen *structDosen, listMahasiswa *structMahasiswa, selector in
 	}
 }
 
-func DeleteData(listDosen *structDosen, listMahasiswa *structMahasiswa, selector int, induk string) {
-	tempDosen := listDosen.next
-	tempMahasiswa := listMahasiswa.next
+func DeleteData(listDosen *structDosen, listMahasiswa *structMahasiswa, selector int, userId string) {
+	tempDosen := listDosen
+	tempMahasiswa := listMahasiswa
 
 	var counter int = 0
 	if selector == 1 {
 		for tempDosen.next != nil {
 			counter++
-			if tempDosen.next.data.nip == induk {
+			if tempDosen.next.data.nip == userId {
 				if counter == 1 {
 					tempDosen.next = tempDosen.next.next
 					break
@@ -118,7 +118,7 @@ func DeleteData(listDosen *structDosen, listMahasiswa *structMahasiswa, selector
 	} else {
 		for tempMahasiswa.next != nil {
 			counter++
-			if tempMahasiswa.next.data.nim == induk {
+			if tempMahasiswa.next.data.nim == userId {
 				if counter == 1 {
 					tempMahasiswa.next = tempMahasiswa.next.next
 					break
@@ -146,6 +146,9 @@ func inputUser(selector int) {
 		} else {
 			fmt.Println("Masukkan data mahasiswa")
 		}
+
+		id++
+
 		fmt.Print("Nama\t: ")
 		scanner.Scan()
 		nama := scanner.Text()
@@ -164,9 +167,10 @@ func inputUser(selector int) {
 			fmt.Print("NIM\t: ")
 		}
 		scanner.Scan()
-		ni := scanner.Text()
-		dataDosen := Dosen{id, nama, alamat, ttl, hp, ni}
-		dataMahasiswa := Mahasiswa{id, nama, alamat, ttl, hp, ni}
+		nip := scanner.Text()
+		dataDosen := Dosen{id, nama, alamat, ttl, hp, nip}
+		dataMahasiswa := Mahasiswa{id, nama, alamat, ttl, hp, nip}
+
 		InsertData(&dosen, &mahasiswa, dataDosen, dataMahasiswa, selector)
 
 		fmt.Println("TAMBAH DATA ?(y/t)")
@@ -180,7 +184,7 @@ func inputUser(selector int) {
 
 }
 
-func utama() {
+func mainMenu() {
 	var in int
 	for in != 3 {
 		fmt.Println("PENGISIAN DATA")
@@ -189,12 +193,12 @@ func utama() {
 		fmt.Println("3. EXIT")
 		fmt.Scan(&in)
 		if in != 3 {
-			menu(in)
+			chooseMenu(in)
 		}
 	}
 }
 
-func menu(x int) {
+func chooseMenu(x int) {
 	var in int
 	for in != 6 {
 		switch x {
@@ -258,5 +262,5 @@ func menu(x int) {
 }
 
 func main() {
-	utama()
+	mainMenu()
 }
