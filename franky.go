@@ -64,6 +64,29 @@ func InsertData(listDosen *structDosen, listMahasiswa *structMahasiswa, dosen Do
 	}
 }
 
+func UpdateData(listDosen *structDosen, listMahasiswa *structMahasiswa, dosen Dosen, mahasiswa Mahasiswa, selector int) {
+	tempDosen := listDosen
+	tempMahasiswa := listMahasiswa
+
+	if selector == 1 {
+		for tempDosen.next != nil {
+			if tempDosen.next.data.nip == dosen.nip {
+				tempDosen.next.data = dosen
+				break
+			}
+			tempDosen = tempDosen.next
+		}
+	} else {
+		for tempMahasiswa.next != nil {
+			if tempMahasiswa.next.data.nim == mahasiswa.nim {
+				tempMahasiswa.next.data = mahasiswa
+				break
+			}
+			tempMahasiswa = tempMahasiswa.next
+		}
+	}
+}
+
 func DeleteData(listDosen *structDosen, listMahasiswa *structMahasiswa, selector int, userId string) {
 	tempDosen := listDosen
 	tempMahasiswa := listMahasiswa
@@ -171,14 +194,63 @@ func ReadData(listDosen *structDosen, listMahasiswa *structMahasiswa, selector i
 	}
 }
 
-func inputUser(selector int) {
+func inputUser(selector int, model int) {
 
 	var x string
 	scanner := bufio.NewScanner(os.Stdin)
 	scanner.Scan()
+	if model == 1 {
+		for x != "t" {
+			fmt.Print("Masukkan Data ")
+			if selector == 1 {
+				fmt.Println("Dosen")
+			} else {
+				fmt.Println("Mahasiswa")
+			}
 
-	for x != "t" {
-		fmt.Print("Masukkan Data ")
+			id++
+
+			fmt.Print("Nama\t: ")
+			scanner.Scan()
+			nama := scanner.Text()
+
+			fmt.Print("Alamat\t: ")
+			scanner.Scan()
+			alamat := scanner.Text()
+
+			fmt.Print("TTL\t: ")
+			scanner.Scan()
+			ttl := scanner.Text()
+
+			fmt.Print("No. HP\t: ")
+			scanner.Scan()
+			hp := scanner.Text()
+
+			var nip, nim string
+			if selector == 1 {
+				fmt.Print("NIP\t: ")
+				scanner.Scan()
+				nip = scanner.Text()
+			} else {
+				fmt.Print("NIM\t: ")
+				scanner.Scan()
+				nim = scanner.Text()
+			}
+
+			// Data Skeleton
+			dataDosen := Dosen{id, nama, alamat, ttl, hp, nip}
+			dataMahasiswa := Mahasiswa{id, nama, alamat, ttl, hp, nim}
+
+			// Insert Data
+			InsertData(&dosen, &mahasiswa, dataDosen, dataMahasiswa, selector)
+
+			// Break Looping
+			fmt.Println("TAMBAH DATA ? [ y / t ]")
+			scanner.Scan()
+			x = strings.TrimSpace(scanner.Text())
+		}
+	} else {
+		fmt.Print("Masukkan Data Baru ")
 		if selector == 1 {
 			fmt.Println("Dosen")
 		} else {
@@ -218,13 +290,8 @@ func inputUser(selector int) {
 		dataDosen := Dosen{id, nama, alamat, ttl, hp, nip}
 		dataMahasiswa := Mahasiswa{id, nama, alamat, ttl, hp, nim}
 
-		// Insert Data
-		InsertData(&dosen, &mahasiswa, dataDosen, dataMahasiswa, selector)
-
-		// Break Looping
-		fmt.Println("TAMBAH DATA ? [ y / t ]")
-		scanner.Scan()
-		x = strings.TrimSpace(scanner.Text())
+		// Update Data
+		UpdateData(&dosen, &mahasiswa, dataDosen, dataMahasiswa, selector)
 	}
 
 }
@@ -249,6 +316,7 @@ func mainMenu() {
 
 func chooseMenu(selector int) {
 	var input int
+	var query string
 
 	for input != 6 {
 		fmt.Print("PENGOLAHAN DATA ")
@@ -271,12 +339,11 @@ func chooseMenu(selector int) {
 		switch input {
 		case 1:
 			if selector == 1 {
-				inputUser(1)
+				inputUser(1, 1)
 			} else {
-				inputUser(2)
+				inputUser(2, 1)
 			}
 		case 2:
-			var query string
 			if selector == 1 {
 				fmt.Println("Masukkan NIP yang ingin dihapus")
 				fmt.Scan(&query)
@@ -287,8 +354,17 @@ func chooseMenu(selector int) {
 				DeleteData(&dosen, &mahasiswa, 2, query)
 			}
 		case 3:
-			// SOON
-			fmt.Println("up DOS")
+			if selector == 1 {
+				fmt.Println("Masukkan NIP yang ingin di update")
+				fmt.Scan(&query)
+				ReadData(&dosen, &mahasiswa, 1, query)
+				inputUser(1, 2)
+			} else {
+				fmt.Println("Masukkan NIM yang ingin di update")
+				fmt.Scan(&query)
+				ReadData(&dosen, &mahasiswa, 2, query)
+				inputUser(2, 2)
+			}
 		case 4:
 			if selector == 1 {
 				ReadData(&dosen, &mahasiswa, 1, "nil")
@@ -296,7 +372,6 @@ func chooseMenu(selector int) {
 				ReadData(&dosen, &mahasiswa, 2, "nil")
 			}
 		case 5:
-			var query string
 			if selector == 1 {
 				fmt.Println("Masukkan NIP yang ingin dilihat")
 				fmt.Scan(&query)
