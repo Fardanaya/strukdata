@@ -64,35 +64,6 @@ func InsertData(listDosen *structDosen, listMahasiswa *structMahasiswa, dosen Do
 	}
 }
 
-// LIHAT DATA SEMUA DOSEN
-func ReadAll(listDosen *structDosen, listMahasiswa *structMahasiswa, selector int) {
-	tempDosen := listDosen.next
-	tempMahasiswa := listMahasiswa.next
-	if selector == 1 {
-		for tempDosen != nil {
-			fmt.Println("-Data Dosen-")
-			fmt.Println("-ID\t\t : ", tempDosen.data.id)
-			fmt.Println("-Nama\t : ", tempDosen.data.nama)
-			fmt.Println("-Alamat\t : ", tempDosen.data.alamat)
-			fmt.Println("-NIP\t : ", tempDosen.data.nip)
-			fmt.Println("-No. HP\t : ", tempDosen.data.hp)
-			fmt.Println("-TTL\t : ", tempDosen.data.ttl)
-			tempDosen = tempDosen.next
-		}
-	} else {
-		for tempMahasiswa != nil {
-			fmt.Println("-Data Mahasiswa-")
-			fmt.Println("-ID\t\t : ", tempMahasiswa.data.id)
-			fmt.Println("-Nama\t : ", tempMahasiswa.data.nama)
-			fmt.Println("-Alamat\t : ", tempMahasiswa.data.alamat)
-			fmt.Println("-NIM\t : ", tempMahasiswa.data.nim)
-			fmt.Println("-No. HP\t : ", tempMahasiswa.data.hp)
-			fmt.Println("-TTL\t : ", tempMahasiswa.data.ttl)
-			tempMahasiswa = tempMahasiswa.next
-		}
-	}
-}
-
 func DeleteData(listDosen *structDosen, listMahasiswa *structMahasiswa, selector int, userId string) {
 	tempDosen := listDosen
 	tempMahasiswa := listMahasiswa
@@ -135,16 +106,83 @@ func DeleteData(listDosen *structDosen, listMahasiswa *structMahasiswa, selector
 	}
 }
 
+// LIHAT DATA
+func ReadData(listDosen *structDosen, listMahasiswa *structMahasiswa, selector int, sort string) {
+	tempDosen := listDosen.next
+	tempMahasiswa := listMahasiswa.next
+
+	fmt.Print("View Data ")
+	if selector == 1 {
+		fmt.Println("Dosen")
+	} else {
+		fmt.Println("Mahasiswa")
+	}
+
+	if sort == "nil" {
+		// View All
+		if selector == 1 {
+			for tempDosen != nil {
+				fmt.Println("-ID\t : ", tempDosen.data.id)
+				fmt.Println("-Nama\t : ", tempDosen.data.nama)
+				fmt.Println("-Alamat\t : ", tempDosen.data.alamat)
+				fmt.Println("-NIP\t : ", tempDosen.data.nip)
+				fmt.Println("-No. HP\t : ", tempDosen.data.hp)
+				fmt.Println("-TTL\t : ", tempDosen.data.ttl)
+				tempDosen = tempDosen.next
+			}
+		} else {
+			for tempMahasiswa != nil {
+				fmt.Println("-ID\t : ", tempMahasiswa.data.id)
+				fmt.Println("-Nama\t : ", tempMahasiswa.data.nama)
+				fmt.Println("-Alamat\t : ", tempMahasiswa.data.alamat)
+				fmt.Println("-NIM\t : ", tempMahasiswa.data.nim)
+				fmt.Println("-No. HP\t : ", tempMahasiswa.data.hp)
+				fmt.Println("-TTL\t : ", tempMahasiswa.data.ttl)
+				tempMahasiswa = tempMahasiswa.next
+			}
+		}
+	} else {
+		// View By NIP or NIM
+		if selector == 1 {
+			for tempDosen != nil {
+				if tempDosen.data.nip == sort {
+					fmt.Println("-ID\t : ", tempDosen.data.id)
+					fmt.Println("-Nama\t : ", tempDosen.data.nama)
+					fmt.Println("-Alamat\t : ", tempDosen.data.alamat)
+					fmt.Println("-NIP\t : ", tempDosen.data.nip)
+					fmt.Println("-No. HP\t : ", tempDosen.data.hp)
+					fmt.Println("-TTL\t : ", tempDosen.data.ttl)
+				}
+				tempDosen = tempDosen.next
+			}
+		} else {
+			for tempMahasiswa != nil {
+				if tempMahasiswa.data.nim == sort {
+					fmt.Println("-ID\t : ", tempMahasiswa.data.id)
+					fmt.Println("-Nama\t : ", tempMahasiswa.data.nama)
+					fmt.Println("-Alamat\t : ", tempMahasiswa.data.alamat)
+					fmt.Println("-NIM\t : ", tempMahasiswa.data.nim)
+					fmt.Println("-No. HP\t : ", tempMahasiswa.data.hp)
+					fmt.Println("-TTL\t : ", tempMahasiswa.data.ttl)
+				}
+				tempMahasiswa = tempMahasiswa.next
+			}
+		}
+	}
+}
+
 func inputUser(selector int) {
-	//var nama, alamat, ttl, hp, nip, nim string
+
 	var x string
 	scanner := bufio.NewScanner(os.Stdin)
 	scanner.Scan()
+
 	for x != "t" {
+		fmt.Print("Masukkan Data ")
 		if selector == 1 {
-			fmt.Println("Masukkan data dosen")
+			fmt.Println("Dosen")
 		} else {
-			fmt.Println("Masukkan data mahasiswa")
+			fmt.Println("Mahasiswa")
 		}
 
 		id++
@@ -152,110 +190,121 @@ func inputUser(selector int) {
 		fmt.Print("Nama\t: ")
 		scanner.Scan()
 		nama := scanner.Text()
+
 		fmt.Print("Alamat\t: ")
 		scanner.Scan()
 		alamat := scanner.Text()
+
 		fmt.Print("TTL\t: ")
 		scanner.Scan()
 		ttl := scanner.Text()
+
 		fmt.Print("No. HP\t: ")
 		scanner.Scan()
 		hp := scanner.Text()
+
+		var nip, nim string
 		if selector == 1 {
 			fmt.Print("NIP\t: ")
+			scanner.Scan()
+			nip = scanner.Text()
 		} else {
 			fmt.Print("NIM\t: ")
+			scanner.Scan()
+			nim = scanner.Text()
 		}
-		scanner.Scan()
-		nip := scanner.Text()
-		dataDosen := Dosen{id, nama, alamat, ttl, hp, nip}
-		dataMahasiswa := Mahasiswa{id, nama, alamat, ttl, hp, nip}
 
+		// Data Skeleton
+		dataDosen := Dosen{id, nama, alamat, ttl, hp, nip}
+		dataMahasiswa := Mahasiswa{id, nama, alamat, ttl, hp, nim}
+
+		// Insert Data
 		InsertData(&dosen, &mahasiswa, dataDosen, dataMahasiswa, selector)
 
-		fmt.Println("TAMBAH DATA ?(y/t)")
+		// Break Looping
+		fmt.Println("TAMBAH DATA ? [ y / t ]")
 		scanner.Scan()
 		x = strings.TrimSpace(scanner.Text())
-		// if x == "t" {
-		// 	break
-		// }
-
 	}
 
 }
 
 func mainMenu() {
-	var in int
-	for in != 3 {
-		fmt.Println("PENGISIAN DATA")
+	var input int
+	for input != 3 {
+		fmt.Println("ITATS")
 		fmt.Println("1. DOSEN")
 		fmt.Println("2. MAHASISWA")
 		fmt.Println("3. EXIT")
-		fmt.Scan(&in)
-		if in != 3 {
-			chooseMenu(in)
+		fmt.Scan(&input)
+		if input < 3 && input > 0 {
+			chooseMenu(input)
+		} else if input != 3 {
+			fmt.Println("Invalid Input")
+		} else {
+			fmt.Println("Exiting Program")
 		}
 	}
 }
 
-func chooseMenu(x int) {
-	var in int
-	for in != 6 {
-		switch x {
-		case 1:
-			fmt.Println("PENGISIAN DATA DOSEN")
-		case 2:
-			fmt.Println("PENGISIAN DATA MAHASISWA")
+func chooseMenu(selector int) {
+	var input int
+
+	for input != 6 {
+		fmt.Print("PENGOLAHAN DATA ")
+		if selector == 1 {
+			fmt.Println("DOSEN")
+		} else {
+			fmt.Println("MAHASISWA")
 		}
-		fmt.Println("1. Tambah data")
-		fmt.Println("2. Hapus data")
-		fmt.Println("3. Update data")
-		fmt.Println("4. Lihat semua data")
-		fmt.Println("5. Lihat dari Nomor Induk")
-		fmt.Println("6. Kembali ")
-		if x == 1 {
-			// punya dosen
-			fmt.Scan(&in)
-			switch in {
-			case 1:
-				// fmt.Println("add DOS")
+
+		fmt.Println("1. Tambah Data")
+		fmt.Println("2. Hapus Data")
+		fmt.Println("3. Update Data")
+		fmt.Println("4. Lihat Semua Data")
+		fmt.Println("5. Lihat Data Menggunakan NIP / NIM")
+		fmt.Println("6. Kembali")
+
+		// Select Menu
+		fmt.Scan(&input)
+
+		switch input {
+		case 1:
+			if selector == 1 {
 				inputUser(1)
-			case 2:
-				var s string
-				fmt.Println("Masukkan NIP yang ingin dihapus")
-				fmt.Scan(&s)
-				DeleteData(&dosen, &mahasiswa, 1, s)
-			case 3:
-				// update()
-				fmt.Println("up DOS")
-			case 4:
-				// fmt.Println("viewall DOS")
-				ReadAll(&dosen, &mahasiswa, 1)
-			case 5:
-				// viewID()
-				fmt.Println("view DOS")
-			}
-		} else if x == 2 {
-			// punya mahasiswa
-			fmt.Scan(&in)
-			switch in {
-			case 1:
-				// fmt.Println("add MHS")
+			} else {
 				inputUser(2)
-			case 2:
-				var s string
+			}
+		case 2:
+			var query string
+			if selector == 1 {
+				fmt.Println("Masukkan NIP yang ingin dihapus")
+				fmt.Scan(&query)
+				DeleteData(&dosen, &mahasiswa, 1, query)
+			} else {
 				fmt.Println("Masukkan NIM yang ingin dihapus")
-				fmt.Scan(&s)
-				DeleteData(&dosen, &mahasiswa, 2, s)
-			case 3:
-				// update()
-				fmt.Println("up MHS")
-			case 4:
-				// fmt.Println("viewall MHS")
-				ReadAll(&dosen, &mahasiswa, 2)
-			case 5:
-				// viewID()
-				fmt.Println("view MHS")
+				fmt.Scan(&query)
+				DeleteData(&dosen, &mahasiswa, 2, query)
+			}
+		case 3:
+			// SOON
+			fmt.Println("up DOS")
+		case 4:
+			if selector == 1 {
+				ReadData(&dosen, &mahasiswa, 1, "nil")
+			} else {
+				ReadData(&dosen, &mahasiswa, 2, "nil")
+			}
+		case 5:
+			var query string
+			if selector == 1 {
+				fmt.Println("Masukkan NIP yang ingin dilihat")
+				fmt.Scan(&query)
+				ReadData(&dosen, &mahasiswa, 1, query)
+			} else {
+				fmt.Println("Masukkan NIM yang ingin dilihat")
+				fmt.Scan(&query)
+				ReadData(&dosen, &mahasiswa, 2, query)
 			}
 		}
 	}
