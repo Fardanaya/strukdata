@@ -93,7 +93,7 @@ func ReadAll(listDosen *structDosen, listMahasiswa *structMahasiswa, selector in
 	}
 }
 
-func DeleteData(listDosen *structDosen, listMahasiswa *structMahasiswa, selector int) {
+func DeleteData(listDosen *structDosen, listMahasiswa *structMahasiswa, selector int, induk string) {
 	tempDosen := listDosen.next
 	tempMahasiswa := listMahasiswa.next
 
@@ -101,7 +101,7 @@ func DeleteData(listDosen *structDosen, listMahasiswa *structMahasiswa, selector
 	if selector == 1 {
 		for tempDosen.next != nil {
 			counter++
-			if tempDosen.next.data.id == selector {
+			if tempDosen.next.data.nip == induk {
 				if counter == 1 {
 					tempDosen.next = tempDosen.next.next
 					break
@@ -118,7 +118,7 @@ func DeleteData(listDosen *structDosen, listMahasiswa *structMahasiswa, selector
 	} else {
 		for tempMahasiswa.next != nil {
 			counter++
-			if tempMahasiswa.next.data.id == selector {
+			if tempMahasiswa.next.data.nim == induk {
 				if counter == 1 {
 					tempMahasiswa.next = tempMahasiswa.next.next
 					break
@@ -139,6 +139,7 @@ func inputUser(selector int) {
 	//var nama, alamat, ttl, hp, nip, nim string
 	var x string
 	scanner := bufio.NewScanner(os.Stdin)
+	scanner.Scan()
 	for x != "t" {
 		if selector == 1 {
 			fmt.Println("Masukkan data dosen")
@@ -157,7 +158,11 @@ func inputUser(selector int) {
 		fmt.Print("No. HP\t: ")
 		scanner.Scan()
 		hp := scanner.Text()
-		fmt.Print("NIP\t: ")
+		if selector == 1 {
+			fmt.Print("NIP\t: ")
+		} else {
+			fmt.Print("NIM\t: ")
+		}
 		scanner.Scan()
 		ni := scanner.Text()
 		dataDosen := Dosen{id, nama, alamat, ttl, hp, ni}
@@ -202,7 +207,7 @@ func menu(x int) {
 		fmt.Println("2. Hapus data")
 		fmt.Println("3. Update data")
 		fmt.Println("4. Lihat semua data")
-		fmt.Println("5. Lihat dari ID")
+		fmt.Println("5. Lihat dari Nomor Induk")
 		fmt.Println("6. Kembali ")
 		if x == 1 {
 			// punya dosen
@@ -212,8 +217,10 @@ func menu(x int) {
 				// fmt.Println("add DOS")
 				inputUser(1)
 			case 2:
-				// del()
-				fmt.Println("del DOS")
+				var s string
+				fmt.Println("Masukkan NIP yang ingin dihapus")
+				fmt.Scan(&s)
+				DeleteData(&dosen, &mahasiswa, 1, s)
 			case 3:
 				// update()
 				fmt.Println("up DOS")
@@ -232,8 +239,10 @@ func menu(x int) {
 				// fmt.Println("add MHS")
 				inputUser(2)
 			case 2:
-				// del()
-				fmt.Println("del MHS")
+				var s string
+				fmt.Println("Masukkan NIM yang ingin dihapus")
+				fmt.Scan(&s)
+				DeleteData(&dosen, &mahasiswa, 2, s)
 			case 3:
 				// update()
 				fmt.Println("up MHS")
